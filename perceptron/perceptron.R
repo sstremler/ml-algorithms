@@ -1,0 +1,119 @@
+rm(list=ls())
+library(ggplot2)
+library(animation)
+library(gganimate)
+
+line_func <- function(x, w , b){
+  return((-b - x * w[1]) / w[2])
+}
+
+line_func_vec <- function(x, w , b){
+  return((-b - x * w[,1]) / w[,2])
+}
+
+perceptron <- setRefClass("perceptron",
+                          fields = list(weight = "numeric", wSteps = "data.frame", dfX = "data.frame"),
+                          methods = list(
+                            train = function(X, Y){
+                              eta <- 0.05
+                              w <- c(0, 1, 1)
+                              X <- data.frame(b = rep(1,dim(X)[1]), X, color = Y)
+                              .self$dfX <- X
+                              error = dim(X)[1]
+                              
+                              while(error > 0){
+                                error = dim(X)[1]
+                                
+                                for(i in seq(1,dim(X)[1])){
+                                  if(sum(X[i,1:3] * w) * Y[i] <= 0){
+                                    w = c(unlist(w + Y[i]*eta*X[i,1:3]))
+                                    .self$wSteps <- rbind(.self$wSteps, w)
+                                  } else {
+                                    error = error - 1
+                                  }
+                                }
+                                
+                              }
+                              
+                              .self$weight <- w
+                              
+                              return(w)
+                            },
+                            
+                            predict = function(X){
+                              if(sum(c(1,X) * .self$weight ) > 0)
+                                return(1)
+                              
+                              return(-1)
+                            },
+                            
+                            plotSteps = function(){
+                              x1Min <- min(.self$dfX$x1)
+                              x1Max <- max(.self$dfX$x1)
+                              x2Min <- min(.self$dfX$x2)
+                              x2Max <- max(.self$dfX$x2)
+                              
+                              for(i in seq(dim(.self$wSteps)[1])){
+                                w <- as.numeric(.self$wSteps[i,])
+                                
+                                dfLine <- data.frame(x1 = c(x1Min, x1Max),
+                                                     x2 = c(line_func(x1Min, w = w[2:3], b = w[1]), line_func(x1Max, w = w[2:3], b = w[1])))
+                                
+                                p <- ggplot(.self$dfX, aes(x=x1, y=x2, color=color)) +
+                                  geom_point(shape=1) + theme(legend.position="none") +
+                                  geom_line(data = dfLine, mapping = aes(x = x1, y = x2), inherit.aes = FALSE) +
+                                  coord_cartesian(ylim=c(x2Min, x2Max))
+                                
+                                print(p)
+                              }
+                            },
+                            
+                            plotAnimation = function(){
+                              x1Min <- min(.self$dfX$x1)
+                              x1Max <- max(.self$dfX$x1)
+                              x2Min <- min(.self$dfX$x2)
+                              x2Max <- max(.self$dfX$x2)
+                              
+                              w <- as.matrix(.self$wSteps)
+                              
+                              dfLine <- data.frame(x1 = c(rep(x1Min, dim(w)[1]), rep(x1Max, dim(w)[1])),
+                                                   x2 = c(line_func_vec(rep(x1Min, dim(w)[1]), w = w[,2:3], b = w[,1]),
+                                                          line_func_vec(rep(x1Max, dim(w)[1]), w = w[,2:3], b = w[,1])),
+                                                   time = seq(dim(w)[1]))
+                              
+                              p <- ggplot(.self$dfX, aes(x=x1, y=x2, color=color)) +
+                                geom_point(shape=1) + theme(legend.position="none") +
+                                geom_line(data = dfLine, mapping = aes(x = x1, y = x2, frame = time), inherit.aes = FALSE) +
+                                coord_cartesian(ylim=c(x2Min, x2Max))
+                              
+                              gganimate(p)
+                            },
+                            
+                            getAllWeights = function(){
+                              return(.self$wSteps)
+                            }
+                          )
+)
+
+set.seed(0)
+
+N <- 10
+X <- data.frame(matrix(rnorm(2 * N, mean=0, sd=1), N, 2))
+X[seq(N+1,2*N),] <- matrix(rnorm(2 * N, mean=2, sd=1), N, 2)
+colnames(X) <- c('x1', 'x2')
+X$y = c(rep(-1, N), rep(1, N))
+
+prc <- perceptron$new()
+weight <- prc$train(X[,1:2], X[,3])
+print(weight)
+
+prc$plotSteps()
+# prc$plotAnimation()
+
+res <- c()
+for(i in seq(dim(X[,1:2])[1])){
+  pred <- prc$predict(c(unlist(X[i,1:2])))
+  res <- c(res, pred)
+}
+
+data.frame(Y = X[,3], Pred = res)
