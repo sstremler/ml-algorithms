@@ -1,3 +1,16 @@
+---
+title: "KernelPerceptron"
+author: "Szabolcs Stremler"
+date: "December 25, 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r echo=FALSE}
 rm(list=ls())
 library(ggplot2)
 library(animation)
@@ -117,7 +130,10 @@ KernelPerceptron <- R6Class("KernelPerceptron",
     
   )
 )
+```
 
+## Initialization
+```{r}
 set.seed(0)
 
 N <- 10
@@ -125,17 +141,53 @@ X <- data.frame(matrix(rnorm(2 * N, mean=0, sd=1), N, 2))
 X[seq(N+1,2*N),] <- matrix(rnorm(2 * N, mean=2, sd=1), N, 2)
 colnames(X) <- c('x1', 'x2')
 X$y = c(rep(-1, N), rep(1, N))
+```
 
+## Train
+```{r}
 kPctr <- KernelPerceptron$new()
 alpha <- kPctr$train(X[,1:2], X[,3], kernel = polynomialKernel, kernelParam = 2)
 print(alpha)
+```
 
+## Plot
+```{r, fig.show='animate', ffmpeg.format='gif', dev='jpeg', warning=FALSE}
+
+kPctr$plotAnimation()
+
+```
+
+## Training score
+```{r}
 res <- c()
 for(i in seq(dim(X[,1:2])[1])){
   pred <- kPctr$predict(X[i,1:2])
   res <- c(res, pred)
 }
 
-result <- data.frame(Y = X[,3], Pred = res)
-print(2)
-kPctr$plotSteps()
+trDf = data.frame(Y = X[,3], Pred = res)
+trScore = sum(trDf$Y == trDf$Pred) / dim(trDf)[1] *100
+print(paste0('Training score: ', trScore, '%'))
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
