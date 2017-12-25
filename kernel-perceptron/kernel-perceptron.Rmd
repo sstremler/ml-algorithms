@@ -136,58 +136,50 @@ KernelPerceptron <- R6Class("KernelPerceptron",
 ```{r}
 set.seed(0)
 
-N <- 10
+N <- 100
 X <- data.frame(matrix(rnorm(2 * N, mean=0, sd=1), N, 2))
-X[seq(N+1,2*N),] <- matrix(rnorm(2 * N, mean=2, sd=1), N, 2)
+X[seq(N+1,2*N),] <- matrix(rnorm(2 * N, mean=0, sd=1), N, 2)
 colnames(X) <- c('x1', 'x2')
-X$y = c(rep(-1, N), rep(1, N))
+
+# generate classes
+# let the class be -1 under the mirror of the hyperbolic cosine function
+# and +1 above
+X$y <- X[,2] <= -cosh(X[,1]) + 1.5
+X$y[X$y == TRUE] <- -1
+X$y[X$y == FALSE] <- 1
+
+X$x2[X$y == 1] = X$x2[X$y == 1] + 0.5
+# ggplot(X, aes(x = x1, y = x2, color = y)) + geom_point()
 ```
 
-## Train
+## Train with polynomial kernel
 ```{r}
-kPctr <- KernelPerceptron$new()
-alpha <- kPctr$train(X[,1:2], X[,3], kernel = polynomialKernel, kernelParam = 2)
+kPctrPoly <- KernelPerceptron$new()
+alpha <- kPctrPoly$train(X[,1:2], X[,3], kernel = polynomialKernel, kernelParam = 2)
 print(alpha)
 ```
 
 ## Plot
-```{r, fig.show='animate', ffmpeg.format='gif', dev='jpeg', warning=FALSE}
+```{r, fig.show='animate', ffmpeg.format='gif', dev='jpeg', warning=FALSE, fig.width=6, fig.height=6}
 
-kPctr$plotAnimation()
+print(paste0("Steps: ", sum(alpha)))
+
+kPctrPoly$plotAnimation()
 
 ```
 
-## Training score
+## Train with gaussian kernel
 ```{r}
-res <- c()
-for(i in seq(dim(X[,1:2])[1])){
-  pred <- kPctr$predict(X[i,1:2])
-  res <- c(res, pred)
-}
-
-trDf = data.frame(Y = X[,3], Pred = res)
-trScore = sum(trDf$Y == trDf$Pred) / dim(trDf)[1] *100
-print(paste0('Training score: ', trScore, '%'))
+kPctrGauss <- KernelPerceptron$new()
+alpha <- kPctrGauss$train(X[,1:2], X[,3], kernel = gaussianKernel, kernelParam = 1)
+print(alpha)
 ```
 
+## Plot
+```{r, fig.show='animate', ffmpeg.format='gif', dev='jpeg', warning=FALSE, fig.width=6, fig.height=6}
 
+print(paste0("Steps: ", sum(alpha)))
 
+kPctrGauss$plotAnimation()
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+```

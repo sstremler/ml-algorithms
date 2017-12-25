@@ -120,11 +120,20 @@ KernelPerceptron <- R6Class("KernelPerceptron",
 
 set.seed(0)
 
-N <- 10
+N <- 100
 X <- data.frame(matrix(rnorm(2 * N, mean=0, sd=1), N, 2))
-X[seq(N+1,2*N),] <- matrix(rnorm(2 * N, mean=2, sd=1), N, 2)
+X[seq(N+1,2*N),] <- matrix(rnorm(2 * N, mean=0, sd=1), N, 2)
 colnames(X) <- c('x1', 'x2')
-X$y = c(rep(-1, N), rep(1, N))
+
+# generate classes
+# let the class be -1 under the mirror of the hyperbolic cosine function
+# and +1 above
+X$y <- X[,2] <= -cosh(X[,1]) + 1.5
+X$y[X$y == TRUE] <- -1
+X$y[X$y == FALSE] <- 1
+
+X$x2[X$y == 1] = X$x2[X$y == 1] + 0.5
+# ggplot(X, aes(x = x1, y = x2, color = y)) + geom_point()
 
 kPctr <- KernelPerceptron$new()
 alpha <- kPctr$train(X[,1:2], X[,3], kernel = polynomialKernel, kernelParam = 2)
@@ -136,6 +145,4 @@ for(i in seq(dim(X[,1:2])[1])){
   res <- c(res, pred)
 }
 
-result <- data.frame(Y = X[,3], Pred = res)
-print(2)
 kPctr$plotSteps()
