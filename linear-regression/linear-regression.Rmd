@@ -1,3 +1,15 @@
+---
+title: "LinearRegression"
+author: "Szabolcs Stremler"
+date: "December 27, 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r echo=FALSE}
 rm(list=ls())
 library(ggplot2)
 library(animation)
@@ -153,7 +165,10 @@ LinearRegression <- R6Class("LinearRegression",
     }
   )
 )
+```
 
+## Initialization
+```{r}
 set.seed(0)
 
 # generate data with r = 0.8 correlation
@@ -161,13 +176,27 @@ N <- 30
 X <- data.frame(matrix(rnorm(N, mean=0, sd=1), N, 1))
 r <- 0.5
 X[,2] <- r*X[,1] + rnorm(length(X[,1]), mean=0, sd=sqrt(1 - r^2))
-cor(X[,1], X[,2])
 colnames(X) <- c('x', 'y')
-ggplot(X, aes(x = x, y = y)) + geom_point()
+cor(X[,1], X[,2])
+```
 
+## Train
+```{r}
 linReg <- LinearRegression$new()
 weight <- linReg$train(X[,1], X[,2], eta = 0.01, maxit = 15)
 print(weight)
+```
 
-# linReg$plotSteps()
-linReg$plotTrajectorySteps()
+## Plot steps
+```{r, fig.show='animate', ffmpeg.format='gif', dev='jpeg', warning=FALSE, fig.width=6, fig.height=6}
+
+linReg$plotAnimation()
+
+```
+
+## Plot trajectory
+```{r, fig.show='animate', ffmpeg.format='gif', dev='jpeg', warning=FALSE, fig.width=6, fig.height=6}
+
+linReg$plotTrajectoryAnimation()
+
+```
