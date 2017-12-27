@@ -1,6 +1,6 @@
 # ml-algorithms
 
-This repository consists of base machine learning algorithms and step-by-step visualizations, animations about their working. The algorithms are implemented in R or Python and they serve mainly educational purposes.
+This repository consists of base machine learning algorithms and step-by-step animations about their working. The algorithms are implemented in R or Python and they serve mainly educational purposes.
 
 Algorithms implemented by now:
 + Perceptron [1]
@@ -11,7 +11,6 @@ Algorithms implemented by now:
 
 ### KernelPerceptron with Gaussian kernel
 <img src="https://github.com/strsz/ml-algorithms/blob/master/kernel-perceptron/kernel-perceptron-gaussian.gif" width="500" height="500">
-
 
 ### LinearRegression trajectory
 <img src="https://github.com/strsz/ml-algorithms/blob/master/linear-regression/linear-regression-trajectory.gif" width="500" height="500">
