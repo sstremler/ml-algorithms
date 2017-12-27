@@ -6,9 +6,13 @@ Algorithms implemented by now:
 + Perceptron [1]
 + KernelPerceptron [2]
 + VotedPerceptron [3]
-+ LinearRegression (in progress)
++ LinearRegression [4]
 
-![alt text](https://github.com/strsz/ml-algorithms/blob/master/perceptron/perceptron.gif "Sample animation")
+### KernelPerceptron with Gaussian kernel
+![alt text](https://github.com/strsz/ml-algorithms/blob/master/kernel-perceptron/kernel-perceptron-gaussian.gif "KernelPerceptron with Gaussian kernel"){:height="400px" width="400px"}
+
+### LinearRegression trajectory
+![alt text](https://github.com/strsz/ml-algorithms/blob/master/linear-regression/linear-regression-trajectory.gif "LinearRegression trajectory"){:height="400px" width="400px"}
 
 ## Bibliography
 [1] Rosenblatt, F. (1958). The perceptron: A probabilistic model for information storage and organization in the brain. *Psychological review*, 65(6), 386.
@@ -17,3 +21,4 @@ Algorithms implemented by now:
 
 [3] Freund, Y., & Schapire, R. E. (1999). Large margin classification using the perceptron algorithm. *Machine learning*, 37(3), 277-296.
 
+[4] Ng, A. (2000). CS229 Lecture notes. CS229 Lecture notes, 1(1), 1-30.
