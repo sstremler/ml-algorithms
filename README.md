@@ -7,6 +7,7 @@ Algorithms implemented by now:
 + KernelPerceptron [2]
 + VotedPerceptron [3]
 + LinearRegression [4]
++ LogisticRegression [4]
 
 ### KernelPerceptron with Gaussian kernel
 <img src="https://github.com/strsz/ml-algorithms/blob/master/kernel-perceptron/kernel-perceptron-gaussian.gif" width="500" height="500">
