@@ -6,6 +6,7 @@ Algorithms implemented by now:
 + Perceptron [1]
 + KernelPerceptron [2]
 + VotedPerceptron [3]
++ LinearRegression (in progress)
 
 ![alt text](https://github.com/strsz/ml-algorithms/blob/master/perceptron/perceptron.gif "Sample animation")
 
