@@ -9,10 +9,11 @@ Algorithms implemented by now:
 + LinearRegression [4]
 
 ### KernelPerceptron with Gaussian kernel
-![alt text](https://github.com/strsz/ml-algorithms/blob/master/kernel-perceptron/kernel-perceptron-gaussian.gif "KernelPerceptron with Gaussian kernel"){:height="400px" width="400px"}
+<img src="https://github.com/strsz/ml-algorithms/blob/master/kernel-perceptron/kernel-perceptron-gaussian.gif" width="400" height="400">
+
 
 ### LinearRegression trajectory
-![alt text](https://github.com/strsz/ml-algorithms/blob/master/linear-regression/linear-regression-trajectory.gif "LinearRegression trajectory"){:height="400px" width="400px"}
+<img src="https://github.com/strsz/ml-algorithms/blob/master/linear-regression/linear-regression-trajectory.gif" width="400" height="400">
 
 ## Bibliography
 [1] Rosenblatt, F. (1958). The perceptron: A probabilistic model for information storage and organization in the brain. *Psychological review*, 65(6), 386.
