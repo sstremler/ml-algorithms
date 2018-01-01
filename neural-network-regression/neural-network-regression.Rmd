@@ -1,3 +1,15 @@
+---
+title: "NeuralNetwork for regression"
+author: "Szabolcs Stremler"
+date: "January 1, 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r echo=FALSE}
 rm(list=ls())
 library(ggplot2)
 library(animation)
@@ -120,6 +132,30 @@ NNRegressor <- R6Class("NNRegressor",
       }
     },
     
+    plotAnimation = function(step){ # the function plot every stepth epoch
+      xMin <- min(self$X)
+      xMax <- max(self$X)
+      rangeX <- seq(xMin, xMax, (xMax - xMin) / 100)
+      dfPred <- data.frame(x = c(0), y = c(0), time = c(0))[-1,]
+      
+      for(i in seq(1, length(self$wSteps), step)){
+        pred <- private$predictStep(matrix(rangeX), i)
+        dfPredTemp <- data.frame(x = rangeX, y = pred[[1]], time = i)
+        dfPred <- rbind(dfPred, dfPredTemp)
+      }
+        
+      mse <- pred[[2]]
+      dfX <- data.frame(x = self$X[,2], y = self$y)
+      
+      p <- ggplot(dfPred) +
+        geom_line(aes(x = x, y = y, frame = time)) + 
+        geom_point(data = dfX, aes(x = x, y = y)) +
+        ggtitle("Epoch: ")
+        # ggtitle(paste("epoch = ", i, ", MSE = ", formatC(mse, digits = 2, format = "f"), sep = ""))
+
+      gganimate(p)
+    },
+    
     plotError = function(){
       errDf <- data.frame(sse = nn$errorSteps, epoch = 1:self$epoch)
       print(ggplot(errDf, aes(x = epoch, y = sse)) + geom_line())
@@ -175,7 +211,10 @@ NNRegressor <- R6Class("NNRegressor",
     }
   )
 )
+```
 
+## Initialization
+```{r}
 set.seed(0)
 
 N <- 200
@@ -184,13 +223,28 @@ xB <- cbind(rep(1, N), X)
 beta <- 3 + 0.4*rnorm(N)
 y <- matrix(1 + X * beta + .75*rnorm(N), ncol = 1)
 layers <- c(10)
+```
 
+## Train
+```{r}
 nn <- NNRegressor$new()
 weights <- nn$train(X, y, layers, epoch = 101, eta = 0.001)
-# print(weights)
+weights
+```
 
-pred <- nn$predict(X)
-print(0.5*sum((y-pred)^2))
+## Plot
+```{r, fig.show='animate', ffmpeg.format='gif', dev='jpeg', warning=FALSE, fig.width=6, fig.height=6}
 
-nn$plotSteps(20)
+nn$plotAnimation(10)
+
+```
+
+## Plot error
+```{r, fig.show='animate', ffmpeg.format='gif', dev='jpeg', warning=FALSE, fig.width=6, fig.height=6}
+
 nn$plotError()
+
+```
+
+
+
