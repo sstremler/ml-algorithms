@@ -8,8 +8,8 @@ Algorithms implemented by now:
 + VotedPerceptron [3]
 + LinearRegression [4]
 + LogisticRegression [4]
-+ NeuralNetwork for Regression [5] (in progress) (feedforward, backpropagation with SGD)
-+ NeuralNetwork for Classification [5] (in progress) (feedforward, backpropagation with SGD)
++ NeuralNetwork for regression [5] (in progress)
++ NeuralNetwork for classification [5] (in progress)
 
 ### KernelPerceptron with Gaussian kernel
 <img src="https://github.com/strsz/ml-algorithms/blob/master/kernel-perceptron/kernel-perceptron-gaussian.gif" width="500" height="500">
