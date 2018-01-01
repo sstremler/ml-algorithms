@@ -8,6 +8,8 @@ Algorithms implemented by now:
 + VotedPerceptron [3]
 + LinearRegression [4]
 + LogisticRegression [4]
++ NeuralNetwork for Regression [5] (in progress) (feedforward, backpropagation with SGD)
++ NeuralNetwork for Classification [5] (in progress) (feedforward, backpropagation with SGD)
 
 ### KernelPerceptron with Gaussian kernel
 <img src="https://github.com/strsz/ml-algorithms/blob/master/kernel-perceptron/kernel-perceptron-gaussian.gif" width="500" height="500">
@@ -23,3 +25,5 @@ Algorithms implemented by now:
 [3] Freund, Y., & Schapire, R. E. (1999). Large margin classification using the perceptron algorithm. *Machine learning*, 37(3), 277-296.
 
 [4] Ng, A. (2000). CS229 Lecture notes. *CS229 Lecture notes, 1*(1), 1-30.
+
+[5] Haykin, S. (1994). *Neural networks: a comprehensive foundation.* Prentice Hall PTR.
