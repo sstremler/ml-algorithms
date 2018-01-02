@@ -1,3 +1,15 @@
+---
+title: "NeuralNetwork for classification"
+author: "Szabolcs Stremler"
+date: "January 2, 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r echo=FALSE, warning=FALSE}
 rm(list=ls())
 library(ggplot2)
 library(animation)
@@ -130,6 +142,10 @@ NNClassifier <- R6Class("NNClassifier",
     },
     
     plotAnimation = function(step){
+      if(length(step) == 1){
+        step <- seq(1, length(nn$wSteps), step)
+      }
+      
       x1Min <- min(self$X[,2])
       x1Max <- max(self$X[,2])
       x2Min <- min(self$X[,3])
@@ -138,9 +154,9 @@ NNClassifier <- R6Class("NNClassifier",
       rangeY = seq(x2Min, x2Max, by = (x2Max - x2Min) / 200)
       contour <- matrix(0, ncol = 4)[-1,]
       
-      for(i in seq(1, length(nn$wSteps), step)){
+      for(i in step){
         contourTemp <- data.matrix(expand.grid(x = rangeX, y = rangeY))
-        contourTemp <- cbind(contour,self$predict(contour[,1:2], self$wSteps[[i]]), i)
+        contourTemp <- cbind(contourTemp, self$predict(contourTemp[,1:2], self$wSteps[[i]]), rep(i,dim(contourTemp)[1]))
         contour <- rbind(contour, contourTemp)
       }
       
@@ -153,14 +169,15 @@ NNClassifier <- R6Class("NNClassifier",
         geom_raster(data = contour, aes(x = x, y = y, fill = factor(z), frame = time), alpha = 1/5) +
         coord_cartesian(ylim=c(x2Min, x2Max)) +
         scale_color_manual(values = c("#DC0026", "#457CB6", "#FF9900")) + 
-        scale_fill_manual(values = c("#DC0026", "#457CB6", "#FF9900"))
+        scale_fill_manual(values = c("#DC0026", "#457CB6", "#FF9900")) +
+        ggtitle("Epoch: ")
       
       gganimate(p)
     },
     
     plotError = function(){
-      errDf <- data.frame(sse = nn$errorSteps, epoch = 1:self$epoch)
-      print(ggplot(errDf, aes(x = epoch, y = sse)) + geom_line())
+      errDf <- data.frame(ce = nn$errorSteps, epoch = 1:self$epoch)
+      print(ggplot(errDf, aes(x = epoch, y = ce)) + geom_line())
     },
     
     plotScore = function(){
@@ -225,47 +242,10 @@ NNClassifier <- R6Class("NNClassifier",
     }
   )
 )
+```
 
-#############
-###### Test 1
-#############
-# set.seed(0)
-# N <- 100
-# X <- matrix(rnorm(2 * N, mean=0, sd=1), N, 2)
-# X <- rbind(X, matrix(rnorm(2 * N, mean=0, sd=1), N, 2))
-# 
-# # generate classes
-# # let the class be -1 under the mirror of the hyperbolic cosine function
-# # and +1 above
-# y <- X[,2] <= -cosh(X[,1]) + 1.5
-# y[y == TRUE] <- 1
-# y[y == FALSE] <- 2
-# yHot <- as.matrix(dummy.data.frame(data.frame(y=y), names=c("y"), sep=""))
-# 
-# X[,2][y == 2] = X[,2][y == 2] + 0.5
-# 
-# # df <- data.frame(x1 = X[,1], x2 = X[,2], y = y)
-# # ggplot(df, aes(x = x1, y = x2, color = y)) + geom_point()
-# 
-# layers <- c(25)
-# 
-# nn <- NNClassifier$new()
-# weights <- nn$train(X, yHot, layers, epoch = 1001, eta = 0.005)
-# # print(weights)
-# 
-# print(paste("Training score: ", nn$score(X,y), "%", sep = ""))
-# print(paste("Cross Entropy Error: ", nn$crossEntropyError(X,y), sep = ""))
-# 
-# nn$plotSteps(100)
-# nn$plotError()
-
-#############
-###### Test 1 end
-#############
-
-#############
-###### Test 2
-#############
+## Initialization
+```{r }
 set.seed(0)
 N <- 100
 X <- matrix(rnorm(2 * N, mean=0, sd=1), N, 2)
@@ -291,19 +271,33 @@ X[,1][y == 3] = X[,1][y == 3] + 0.25
 # ggplot(df, aes(x = x1, y = x2, color = y)) + geom_point()
 
 layers <- c(25)
+```
 
+## Train
+```{r}
 nn <- NNClassifier$new()
 weights <- nn$train(X, y, layers, epoch = 1001, eta = 0.005)
-# print(weights)
-
 print(paste("Training score: ", nn$score(X,y), "%", sep = ""))
 print(paste("Cross Entropy Error: ", nn$crossEntropyError(X,y), sep = ""))
+```
 
-nn$plotSteps(100)
+## Plot
+```{r, fig.show='animate', ffmpeg.format='gif', dev='jpeg', warning=FALSE, fig.width=6, fig.height=6}
+
+nn$plotAnimation(c(1:15,50,100,500,1001))
+
+```
+
+## Plot cross entropy error
+```{r, fig.width=6, fig.height=6}
+
 nn$plotError()
+
+```
+
+## Plot score
+```{r, fig.width=6, fig.height=6}
+
 nn$plotScore()
-#############
-###### Test 2 end
-#############
 
-
+```
