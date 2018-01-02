@@ -11,6 +11,11 @@ Algorithms implemented by now:
 + NeuralNetwork for regression [5] (in progress)
 + NeuralNetwork for classification [5] (in progress)
 
+### NeuralNetwork and its cross entropy error
+<img src="https://github.com/strsz/ml-algorithms/blob/master/neural-network-classification/neural-network-classification.gif" width="500" height="500">
+
+<img src="https://github.com/strsz/ml-algorithms/blob/master/neural-network-classification/cross-entropy-error.png" width="500" height="500">
+
 ### KernelPerceptron with Gaussian kernel
 <img src="https://github.com/strsz/ml-algorithms/blob/master/kernel-perceptron/kernel-perceptron-gaussian.gif" width="500" height="500">
 
