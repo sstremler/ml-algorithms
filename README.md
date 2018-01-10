@@ -1,6 +1,6 @@
 # ml-algorithms
 
-This repository consists of base machine learning algorithms and step-by-step animations about their working. The algorithms are implemented in R or Python and they serve mainly educational purposes. The implementation of the algorithms are intentionally simple and pass over all kinds of optimalization in order to be easily modifiable.
+This repository consists of base machine learning algorithms and step-by-step animations about their working. The algorithms are implemented in R and they serve mainly educational purposes. The implementation of the algorithms are intentionally simple and pass over all kinds of optimalization in order to be easily modifiable.
 
 Algorithms implemented by now:
 + Perceptron [1]
@@ -10,6 +10,11 @@ Algorithms implemented by now:
 + LogisticRegression [4]
 + NeuralNetwork for regression [5] (in progress)
 + NeuralNetwork for classification [5] (in progress)
+
+### NeuralNetwork and its cross entropy error
+<img src="https://github.com/strsz/ml-algorithms/blob/master/neural-network-classification/neural-network-classification.gif" width="500" height="500">
+
+<img src="https://github.com/strsz/ml-algorithms/blob/master/neural-network-classification/cross-entropy-error.png" width="500" height="500">
 
 ### KernelPerceptron with Gaussian kernel
 <img src="https://github.com/strsz/ml-algorithms/blob/master/kernel-perceptron/kernel-perceptron-gaussian.gif" width="500" height="500">
