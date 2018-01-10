@@ -61,67 +61,7 @@ VotedPerceptron <- R6Class("VotedPerceptron",
     
     predict = function(X){
       return(sign(sum(vPctr$cSteps * sign(c(1,unlist(X)) %*% t(vPctr$weightSteps)))))
-    },
-    
-    plotSteps = function(){
-      x1Min <- min(self$X[,2])
-      x1Max <- max(self$X[,2])
-      x2Min <- min(self$X[,3])
-      x2Max <- max(self$X[,3])
-      
-      for(i in seq(2,dim(self$weightSteps)[1])){
-        w <- colSums(vPctr$cSteps[1:i] * vPctr$weightSteps[1:i,]) / sum(vPctr$cSteps[1:i])
-        
-        dfLine <- data.frame(x1 = c(x1Min, x1Max),
-                             x2 = c(lineFunction(x1Min, w = w[2:3], b = w[1]), lineFunction(x1Max, w = w[2:3], b = w[1])))
-        
-        dfX = data.frame(self$X, self$Y)
-        colnames(dfX) <- c("b", "x1", "x2", "y")
-        
-        p <- ggplot(dfX, aes(x=x1, y=x2)) +
-          geom_point(aes(color = factor(y), shape = factor(y)), size = 2) + theme(legend.position="none") +
-          geom_line(data = dfLine, mapping = aes(x = x1, y = x2), inherit.aes = FALSE) +
-          coord_cartesian(ylim=c(x2Min, x2Max)) +
-          scale_color_manual(values = c("#DC0026", "#457CB6")) + 
-          scale_fill_manual(values = c("#DC0026", "#457CB6"))
-        
-        print(p)
-      }
-    },
-    
-    plotAnimation = function(){
-      x1Min <- min(self$X[,2])
-      x1Max <- max(self$X[,2])
-      x2Min <- min(self$X[,3])
-      x2Max <- max(self$X[,3])
-      
-      w <- matrix(0, ncol = dim(self$X)[2])
-      
-      for(i in seq(2,dim(self$weightSteps)[1])){
-        w <- rbind(w, colSums(vPctr$cSteps[1:i] * vPctr$weightSteps[1:i,]) / sum(vPctr$cSteps[1:i]))
-      }
-      
-      rowNum <- dim(w)[1]
-      
-      dfLine <- data.frame(x1 = c(rep(x1Min, rowNum), rep(x1Max, rowNum)),
-                           x2 = c(lineFunctionVec(rep(x1Min, rowNum), w = w[,2:3], b = w[,1]),
-                                  lineFunctionVec(rep(x1Max, rowNum), w = w[,2:3], b = w[,1])),
-                           time = seq(dim(w)[1]))
-      dfLine <- replace(dfLine, is.na(dfLine), 0)
-      
-      dfX = data.frame(self$X, self$Y)
-      colnames(dfX) <- c("b", "x1", "x2", "y")
-      
-      p <- ggplot(dfX, aes(x=x1, y=x2)) +
-        geom_point(aes(color = factor(y), shape = factor(y)), size = 2) + theme(legend.position="none") +
-        geom_line(data = dfLine, mapping = aes(x = x1, y = x2, frame = time), inherit.aes = FALSE) +
-        coord_cartesian(ylim=c(x2Min, x2Max)) +
-        scale_color_manual(values = c("#DC0026", "#457CB6")) + 
-        scale_fill_manual(values = c("#DC0026", "#457CB6"))
-      
-      gganimate(p)
     }
-    
   )
 )
 ```
@@ -147,7 +87,7 @@ weight
 ## Plot
 ```{r, fig.show='animate', ffmpeg.format='gif', dev='jpeg', warning=FALSE, fig.width=6, fig.height=6}
 
-vPctr$plotAnimation()
+# vPctr$plotAnimation()
 
 ```
 
