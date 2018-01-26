@@ -85,8 +85,8 @@ LinearRegression <- R6Class("LinearRegression",
       bDiff <- bMax - bMin
       xDiff <- xMax - xMin
       
-      rangeB = seq(bMin-bDiff*0.1, bMax+bDiff*0.1, by = bDiff / 200)
-      rangeX = seq(xMin-xDiff*0.1, xMax+xDiff*0.1, by = xDiff / 200)
+      rangeB = seq(bMin-bDiff*0.3, bMax+bDiff*0.3, by = bDiff / 200)
+      rangeX = seq(xMin-xDiff*0.3, xMax+xDiff*0.3, by = xDiff / 200)
       contour <- expand.grid(b = rangeB, x = rangeX)
       contour$z <- apply(contour[,1:2], 1, self$predictCost)
       
@@ -103,7 +103,7 @@ LinearRegression <- R6Class("LinearRegression",
         
         p <- ggplot(contour, aes(x = b, y = x, z = z)) +
           theme(legend.position="none") +
-          geom_contour(binwidth = 0.007) + 
+          geom_contour(binwidth = 0.15) + 
           geom_segment(data=dfW, mapping=aes(x=b, y=x, xend=bend, yend=xend), arrow=arrow(length = unit(0.2, "cm")), size=0.5, color="red", inherit.aes = FALSE)
         
         print(p)
@@ -141,7 +141,7 @@ LinearRegression <- R6Class("LinearRegression",
       
       p <- ggplot(contour, aes(x = b, y = x, z = z)) +
         theme(legend.position="none") +
-        geom_contour(binwidth = 0.007) + 
+        geom_contour(binwidth = 0.15) + 
         geom_segment(data=dfW, mapping=aes(x=b, y=x, xend=bend, yend=xend, frame = time), arrow=arrow(length = unit(0.2, "cm")), size=0.5, color="red", inherit.aes = FALSE)
       
       gganimate(p)
@@ -149,7 +149,7 @@ LinearRegression <- R6Class("LinearRegression",
     },
     
     predictCost = function(w){
-      return(0.5*sum(w %*% t(self$X) - self$Y)^2)
+      return(0.5*sum((w %*% t(self$X) - self$Y)^2))
     }
   )
 )
